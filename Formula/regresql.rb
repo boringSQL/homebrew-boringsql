@@ -1,8 +1,8 @@
 class Regresql < Formula
   desc "Regression testing framework for SQL queries targeting PostgreSQL databases"
   homepage "https://github.com/boringsql/regresql"
-  url "https://github.com/boringSQL/regresql/archive/refs/tags/v2.0.0-alpha4.tar.gz"
-  sha256 "7727806f28d96700ad2653f168d133adeec02e48c41de7dc23a005ad4593da39"
+  url "https://github.com/boringSQL/regresql/archive/refs/tags/v0.2.0-beta1.tar.gz"
+  sha256 "1b03956a60c00b5efb8155462a2e65e7930f4e6bf69d188f5b8321c95efb36c3"
   license "BSD-2-Clause"
 
   depends_on "go" => :build
