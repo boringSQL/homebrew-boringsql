@@ -1,4 +1,4 @@
-FORMULAS := fixturize regresql
+FORMULAS := dryrun fixturize regresql
 
 .PHONY: update
 
