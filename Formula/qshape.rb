@@ -1,36 +1,65 @@
 class Qshape < Formula
-  desc "AST-level canonicalization and fingerprinting of PostgreSQL queries"
+  desc "AST-level canonicalization and fingerprinting of PostgreSQL queries, with pg_stat_statements capture."
   homepage "https://github.com/boringsql/qshape"
-  version "0.1.0"
-  license "BSD-2-Clause"
-
-  on_macos do
-    on_arm do
-      url "https://github.com/boringSQL/qshape/releases/download/v#{version}/qshape_#{version}_darwin_arm64.tar.gz"
-      sha256 "83752e4b2777262bc452b9095e1f262ef870d59818fd1589d8882dab1c693539"
+  version "0.2.0"
+  if OS.mac?
+    if Hardware::CPU.arm?
+      url "https://github.com/boringsql/qshape/releases/download/v0.2.0/qshape-aarch64-apple-darwin.tar.xz"
+      sha256 "44a3cf3d7aba33bdc79187b94fec7f3aca93720140dee34f46070fcdf97590fc"
     end
-    on_intel do
-      url "https://github.com/boringSQL/qshape/releases/download/v#{version}/qshape_#{version}_darwin_amd64.tar.gz"
-      sha256 "c004e089018539327e9e9314a935f1abf959e5872b42708cb063f424fc376dd4"
+    if Hardware::CPU.intel?
+      url "https://github.com/boringsql/qshape/releases/download/v0.2.0/qshape-x86_64-apple-darwin.tar.xz"
+      sha256 "4edc9e64ba55ecbfc3c0aac46377c5d063ab24c9e561bc1c6ac263f130234a20"
     end
   end
-
-  on_linux do
-    on_arm do
-      url "https://github.com/boringSQL/qshape/releases/download/v#{version}/qshape_#{version}_linux_arm64.tar.gz"
-      sha256 "9ece2e94e589aadc47787925403340a64cd06113f3ca345df9a361f9f7d0a1be"
+  if OS.linux?
+    if Hardware::CPU.arm?
+      url "https://github.com/boringsql/qshape/releases/download/v0.2.0/qshape-aarch64-unknown-linux-gnu.tar.xz"
+      sha256 "c3cf1b22ab6f7038454a65751c45aa6109c864345a14df544ce6a07f31dabdcf"
     end
-    on_intel do
-      url "https://github.com/boringSQL/qshape/releases/download/v#{version}/qshape_#{version}_linux_amd64.tar.gz"
-      sha256 "02c77914258a1f8dd434062f228664034d301c3146c8e85176e3576e8c081b9b"
+    if Hardware::CPU.intel?
+      url "https://github.com/boringsql/qshape/releases/download/v0.2.0/qshape-x86_64-unknown-linux-gnu.tar.xz"
+      sha256 "e88981ce7fa9d01065cb65a17e9926250b50a43bc7a9c62982d8500f13f2da2f"
+    end
+  end
+  license "MIT"
+
+  BINARY_ALIASES = {
+    "aarch64-apple-darwin":      {},
+    "aarch64-unknown-linux-gnu": {},
+    "x86_64-apple-darwin":       {},
+    "x86_64-unknown-linux-gnu":  {},
+  }.freeze
+
+  def target_triple
+    cpu = Hardware::CPU.arm? ? "aarch64" : "x86_64"
+    os = OS.mac? ? "apple-darwin" : "unknown-linux-gnu"
+
+    "#{cpu}-#{os}"
+  end
+
+  def install_binary_aliases!
+    BINARY_ALIASES[target_triple.to_sym].each do |source, dests|
+      dests.each do |dest|
+        bin.install_symlink bin/source.to_s => dest
+      end
     end
   end
 
   def install
-    bin.install "qshape"
-  end
+    bin.install "qshape" if OS.mac? && Hardware::CPU.arm?
+    bin.install "qshape" if OS.mac? && Hardware::CPU.intel?
+    bin.install "qshape" if OS.linux? && Hardware::CPU.arm?
+    bin.install "qshape" if OS.linux? && Hardware::CPU.intel?
 
-  test do
-    assert_match version.to_s, shell_output("#{bin}/qshape version")
+    install_binary_aliases!
+
+    # Homebrew will automatically install these, so we don't need to do that
+    doc_files = Dir["README.*", "readme.*", "LICENSE", "LICENSE.*", "CHANGELOG.*"]
+    leftover_contents = Dir["*"] - doc_files
+
+    # Install any leftover files in pkgshare; these are probably config or
+    # sample files.
+    pkgshare.install(*leftover_contents) unless leftover_contents.empty?
   end
 end
