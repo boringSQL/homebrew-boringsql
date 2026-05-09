@@ -1,8 +1,8 @@
 class Fixturize < Formula
   desc "Extract referentially-intact subsets from PostgreSQL, anonymize PII, and seed environments"
   homepage "https://github.com/boringSQL/fixturize"
-  url "https://github.com/boringSQL/fixturize/archive/refs/tags/v0.4.0.tar.gz"
-  sha256 "53490d01df5a04abd2d9ce90f919bb5bba6ee8f3931148a1a4a4792dbdb2b50c"
+  url "https://github.com/boringSQL/fixturize/archive/refs/tags/v0.5.0.tar.gz"
+  sha256 "2e2d8b2f964bf34c9e73d9388ef2bd610d06877dc1265a695953abb1b7e06134"
   license "BSD-2-Clause"
 
   depends_on "go" => :build
