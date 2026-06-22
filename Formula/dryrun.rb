@@ -1,24 +1,24 @@
 class Dryrun < Formula
   desc "PostgreSQL schema intelligence MCP server with offline linting, migration safety analysis, and query validation"
   homepage "https://github.com/boringSQL/dryrun"
-  version "0.11.0"
+  version "0.11.1"
   license "BSD-2-Clause"
 
   on_macos do
     on_arm do
       url "https://github.com/boringSQL/dryrun/releases/download/v#{version}/dry_run_cli-aarch64-apple-darwin.tar.xz"
-      sha256 "381576291f1dd8697dd23672dd99a22be13a1335d231e7c37336a5f65be9339d"
+      sha256 "39d72526afc6126f3fd30c3dbcecd1ebd8013e24000e7bfafb6208343f46a0fa"
     end
   end
 
   on_linux do
     on_arm do
       url "https://github.com/boringSQL/dryrun/releases/download/v#{version}/dry_run_cli-aarch64-unknown-linux-gnu.tar.xz"
-      sha256 "5449049a0520e2f6f9d64e0c90f06bcd64b5eb335c3c2b06e6f61eb978ac7db2"
+      sha256 "678284e848e6d940cb2c71a8bb2741bf3997bfd1a4422a977b5bd5bb7fb8a98e"
     end
     on_intel do
       url "https://github.com/boringSQL/dryrun/releases/download/v#{version}/dry_run_cli-x86_64-unknown-linux-gnu.tar.xz"
-      sha256 "ebf9f267561aba25771f9859b37f0024782067c690b43cdc333207dcacec5bd0"
+      sha256 "1f1fadd1dd465e622d50c8f82a5d9c06d632a31720c5042e9d3c43eacc61f1cd"
     end
   end
 
