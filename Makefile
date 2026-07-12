@@ -1,7 +1,7 @@
-SOURCE_FORMULAS := dryrun fixturize regresql
+SOURCE_FORMULAS := dryrun fixturize
 FORMULAS := $(SOURCE_FORMULAS)
 
-.PHONY: update update-dryrun
+.PHONY: update update-dryrun update-regresql
 
 ## update a source-build formula to a new tag.
 ## usage: make update FORMULA=fixturize TAG=v0.4.0
@@ -42,3 +42,22 @@ endif
 	done; \
 	sed -i '' 's/version "[^"]*"/version "$(VERSION)"/' Formula/dryrun.rb
 	@echo "Done. Review with: git diff Formula/dryrun.rb"
+
+## update regresql binary formula after a new release.
+## usage: make update-regresql TAG=v2.0.0
+update-regresql:
+ifndef TAG
+	$(error TAG is required. Usage: make update-regresql TAG=v2.0.0)
+endif
+	$(eval VERSION := $(patsubst v%,%,$(TAG)))
+	@set -e; \
+	BASE="https://github.com/boringSQL/regresql/releases/download/$(TAG)"; \
+	for target in aarch64-apple-darwin x86_64-apple-darwin aarch64-unknown-linux-gnu x86_64-unknown-linux-gnu; do \
+		URL="$$BASE/regresql-$$target.tar.xz"; \
+		echo "Fetching $$URL ..."; \
+		SHA=$$(curl -fsSL "$$URL" | shasum -a 256 | cut -d' ' -f1); \
+		echo "  $$target -> $$SHA"; \
+		sed -i '' "/regresql-$$target\.tar\.xz/{n;s/sha256 \"[a-f0-9]*/sha256 \"$$SHA/;}" Formula/regresql.rb; \
+	done; \
+	sed -i '' 's/version "[^"]*"/version "$(VERSION)"/' Formula/regresql.rb
+	@echo "Done. Review with: git diff Formula/regresql.rb"
