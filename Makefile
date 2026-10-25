@@ -36,7 +36,8 @@ endif
 	for target in aarch64-apple-darwin aarch64-unknown-linux-gnu x86_64-unknown-linux-gnu; do \
 		URL="$$BASE/dry_run_cli-$$target.tar.xz"; \
 		echo "Fetching $$URL ..."; \
-		SHA=$$(curl -fsSL "$$URL" | shasum -a 256 | cut -d' ' -f1); \
+		TMP=$$(mktemp); curl -fsSL -o "$$TMP" "$$URL"; \
+		SHA=$$(shasum -a 256 "$$TMP" | cut -d" " -f1); rm -f "$$TMP"; \
 		echo "  $$target -> $$SHA"; \
 		sed -i '' "/dry_run_cli-$$target\.tar\.xz/{n;s/sha256 \"[a-f0-9]*/sha256 \"$$SHA/;}" Formula/dryrun.rb; \
 	done; \
@@ -55,7 +56,8 @@ endif
 	for target in aarch64-apple-darwin x86_64-apple-darwin aarch64-unknown-linux-gnu x86_64-unknown-linux-gnu; do \
 		URL="$$BASE/regresql-$$target.tar.xz"; \
 		echo "Fetching $$URL ..."; \
-		SHA=$$(curl -fsSL "$$URL" | shasum -a 256 | cut -d' ' -f1); \
+		TMP=$$(mktemp); curl -fsSL -o "$$TMP" "$$URL"; \
+		SHA=$$(shasum -a 256 "$$TMP" | cut -d" " -f1); rm -f "$$TMP"; \
 		echo "  $$target -> $$SHA"; \
 		sed -i '' "/regresql-$$target\.tar\.xz/{n;s/sha256 \"[a-f0-9]*/sha256 \"$$SHA/;}" Formula/regresql.rb; \
 	done; \
